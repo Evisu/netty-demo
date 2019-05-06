@@ -6,6 +6,12 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
+/**
+ * 实现了多客户端通信
+ * 
+ * @author walkman
+ *
+ */
 public class MyChatServer {
 	public static void main(String[] args) throws Exception {
 		// 事件循环组
