@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>websockets客户端</title>
+</head>
+<body>
+	<table width="800" align="center">
+		<tr>
+			<td>Location:</td>
+			<td>
+				<input id="Location" type="text" value="ws://localhost:8899/ws">
+				<button id="conBtn" type="button" onclick="connection();">Connection</button>
+				<button id="disconBtn" type="button" onclick="disconnection();" disabled>Disconnection</button><br>
+			</td>
+		</tr>
+		<tr>
+			<td>Message:</td>
+			<td>
+				<input id="Message" type="text" value="Hello,WebSocket!">
+				<button id="sendBtn" type="button" onclick="sendMsg()" disabled>Send</button><br>
+			</td>
+		</tr>
+		<tr>
+			<td>Log:</td>
+			<td>
+				<div id="logArea" style="width:800px;height:600px;border:1px solid #F00;overflow-y:auto;"></div>			
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>
+				<button id="clearBtn" onclick="clearLog()">Clear Log</button>
+			</td>
+		</tr>
+	</table>
+</body>
+<script type="text/javascript">
+	var ws;
+	var logArea = getById("logArea");
+	
+	function connection(){
+
+		var Location = getById('Location').value;
+		
+		ws = new WebSocket(Location);
+
+		ws.onopen = function(evt){
+			console.log('Connection open ...');
+			writeToScreen('<span style="color:green;">Connection open ...</span>');
+			
+			getById('conBtn').disabled = true;
+			getById('disconBtn').disabled = false;
+			getById('sendBtn').disabled = false;
+		}
+
+		ws.onmessage = function(evt){
+			console.log('Received Message :'+evt.data);
+			writeToScreen('<span style="color:blue;">Received Message :'+evt.data+'</span>');
+			scrollBottom();
+		}
+
+		ws.onclose = function(evt){
+			console.log('Connection closed...');
+			writeToScreen('<span style="color:red;">Connection closed...</span>');
+			
+			getById('conBtn').disabled = false;
+			getById('disconBtn').disabled = true;
+			getById('sendBtn').disabled = true;
+		}
+
+		ws.onerror = function(evt){
+			console.log('error...');
+			writeToScreen('<span style="color:red;">ERROR:</span>'+evt.data);
+		}
+		
+		return ws;
+	}
+	
+	function disconnection(){
+		ws.close();
+	}
+
+	function sendMsg(){
+		var msg = getById("Message").value;
+		ws.send(msg);			
+		console.log('Send Message :'+msg);
+		writeToScreen('Send Message :'+msg);
+	}
+	
+	function writeToScreen(msg){
+		msg += '<span style="float: right;">' + getCurDate()+'</span>';
+		var pre = document.createElement("p");
+		pre.style.wordWrap = "break-word";
+		pre.innerHTML = msg;
+		logArea.appendChild(pre);
+	}
+	
+	function getById(id){
+		return document.getElementById(id);
+	}
+	
+	function clearLog(){
+		logArea.innerHTML = "";
+	}
+	
+	function getCurDate(){
+		var date = new Date();
+		//return date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate()
+		return date.getHours() + ':' + (date.getMinutes() < 10 ? ('0'+date.getMinutes()): date.getMinutes() )+ ':' + (date.getSeconds() < 10 ? ('0'+date.getSeconds()): date.getSeconds());
+	}
+	
+	// DIV滚动到最底部
+	function scrollBottom(){
+		logArea.scrollTop = logArea.scrollHeight;
+	}
+
+</script>
+</html>
