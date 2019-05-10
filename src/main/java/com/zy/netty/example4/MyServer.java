@@ -8,6 +8,12 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
+/**
+ * netty读写检测机制
+ * 
+ * @author walkman
+ *
+ */
 public class MyServer {
 	public static void main(String[] args) throws Exception {
 		// 事件循环组
