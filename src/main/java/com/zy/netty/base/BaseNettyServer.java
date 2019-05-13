@@ -24,6 +24,12 @@ public abstract class BaseNettyServer {
 	 */
 	public abstract List<ChannelHandler> getHandlerList();
 	
+	/**
+	 * 	启动服务端
+	 * 
+	 * @param port
+	 * @throws Exception
+	 */
 	public void start(int port) throws Exception {
 		// 事件循环组
 		EventLoopGroup parentLoopGroup = new NioEventLoopGroup();
@@ -31,7 +37,6 @@ public abstract class BaseNettyServer {
 		try {
 			ServerBootstrap serverBootstrap = new ServerBootstrap();
 			serverBootstrap.group(parentLoopGroup, childLoopGroup).channel(NioServerSocketChannel.class).childHandler(new ChannelInitializer<Channel>() {
-				@Override
 				protected void initChannel(Channel ch) throws Exception {
 					for (ChannelHandler factory : getHandlerList()) {
 						ch.pipeline().addLast(factory);
