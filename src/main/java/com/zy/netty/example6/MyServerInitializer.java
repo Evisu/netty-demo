@@ -8,6 +8,7 @@ import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 
+@Deprecated
 public class MyServerInitializer extends ChannelInitializer<SocketChannel>{
 
 	@Override

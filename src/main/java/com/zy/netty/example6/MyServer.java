@@ -1,14 +1,15 @@
 package com.zy.netty.example6;
 
-import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
+import com.zy.netty.base.BaseNettyServer;
+
+import io.netty.channel.ChannelHandler;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 
 /**
  * 	服务端示例
@@ -16,21 +17,20 @@ import io.netty.handler.logging.LoggingHandler;
  * @author walkman
  *
  */
-public class MyServer {
+public class MyServer extends BaseNettyServer{
+	
 	public static void main(String[] args) throws Exception {
-		// 事件循环组
-		EventLoopGroup parentLoopGroup = new NioEventLoopGroup();
-		EventLoopGroup childLoopGroup = new NioEventLoopGroup();
-		try {
-			ServerBootstrap serverBootstrap = new ServerBootstrap();
-			serverBootstrap.group(parentLoopGroup, childLoopGroup).channel(NioServerSocketChannel.class)
-			.handler( new LoggingHandler(LogLevel.INFO) ).childHandler(new MyServerInitializer());
-			
-			ChannelFuture channelFuture = serverBootstrap.bind(new InetSocketAddress(8899)).sync();
-			channelFuture.channel().closeFuture().sync();
-		} finally {
-			parentLoopGroup.shutdownGracefully();
-			childLoopGroup.shutdownGracefully();
-		}
+		new MyServer().start(8899);
+	}
+
+	@Override
+	public List<ChannelHandler> getHandlerList() {
+		List<ChannelHandler> handlerList = new ArrayList<ChannelHandler>();
+		handlerList.add(new ProtobufVarint32FrameDecoder());
+		handlerList.add(new ProtobufDecoder(MyMessageInfo.MyMessage.getDefaultInstance()));
+		handlerList.add(new ProtobufVarint32LengthFieldPrepender());
+		handlerList.add(new ProtobufEncoder());
+		handlerList.add(new MyServerHandler());
+		return handlerList;
 	}
 }
