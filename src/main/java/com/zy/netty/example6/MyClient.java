@@ -1,27 +1,32 @@
 package com.zy.netty.example6;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioSocketChannel;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MyClient {
+import com.zy.netty.base.BaseNettyClient;
+
+import io.netty.channel.ChannelHandler;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
+
+public class MyClient extends BaseNettyClient{
 	
 	public static void main(String[] args) throws Exception {
-		EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
-		
-		try {
-			Bootstrap bootstrap = new Bootstrap();
-			bootstrap.group(eventLoopGroup).channel(NioSocketChannel.class).handler(new MyClientInitializer());
-			
-			ChannelFuture channelFuture = bootstrap.connect("localhost", 8899).sync();
-			channelFuture.channel().closeFuture().sync();
-			
-		} finally {
-			eventLoopGroup.shutdownGracefully();
-		}
-		
+		MyClient myClient = new MyClient();
+		myClient.start("localhost", 8899);
+	}
+
+	@Override
+	public List<ChannelHandler> getHandlerList() {
+		List<ChannelHandler> handlerList = new ArrayList<ChannelHandler>();
+		handlerList.add(new ProtobufVarint32FrameDecoder());
+		handlerList.add(new ProtobufDecoder(MyMessageInfo.MyMessage.getDefaultInstance()));
+		handlerList.add(new ProtobufVarint32LengthFieldPrepender());
+		handlerList.add(new ProtobufEncoder());
+		handlerList.add(new MyClientHandler());
+		return handlerList;
 	}
 
 }
