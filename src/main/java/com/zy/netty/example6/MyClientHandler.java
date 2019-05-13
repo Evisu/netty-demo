@@ -18,6 +18,7 @@ public class MyClientHandler extends SimpleChannelInboundHandler<MyMessageInfo.M
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		
+		// 随机发送消息内容，服务端根据消息类型进行数据解析
 		int randomInt = new Random().nextInt(3);
 		
 		MyMessageInfo.MyMessage myMessage = null;

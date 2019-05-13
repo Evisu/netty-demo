@@ -12,7 +12,6 @@ public class MyServerHandler extends SimpleChannelInboundHandler<MyMessageInfo.M
 		
 		System.out.println("收到客户端的消息：");
 		
-		
 		switch (msg.getDataType().getNumber()) {
 			case DataType.PersonType_VALUE:
 				MyMessageInfo.Person person = msg.getPerson();
