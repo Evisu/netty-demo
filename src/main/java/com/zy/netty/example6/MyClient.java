@@ -14,8 +14,7 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 public class MyClient extends BaseNettyClient{
 	
 	public static void main(String[] args) throws Exception {
-		MyClient myClient = new MyClient();
-		myClient.start("localhost", 8899);
+		new MyClient().start("localhost", 8899);
 	}
 
 	@Override
