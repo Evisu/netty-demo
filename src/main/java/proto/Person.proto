@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package com.zy.netty.protobuf;
+
+option java_package = "com.zy.netty.example6";
+option java_outer_classname  = "MyDataInfo";
+
+message Person{
+
+	int32 id = 1;
+	string name = 2;
+	int32 age = 3;
+	string address = 4;
+
+}
