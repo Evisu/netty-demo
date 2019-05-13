@@ -16,7 +16,7 @@ public class MyServerInitializer extends ChannelInitializer<SocketChannel>{
 		ChannelPipeline pipeline = ch.pipeline();
 		
 		pipeline.addLast(new ProtobufVarint32FrameDecoder());
-		pipeline.addLast(new ProtobufDecoder(MyDataInfo.Person.getDefaultInstance()));
+		pipeline.addLast(new ProtobufDecoder(MyMessageInfo.MyMessage.getDefaultInstance()));
 		pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
 		pipeline.addLast(new ProtobufEncoder());
 		pipeline.addLast(new MyServerHandler());
