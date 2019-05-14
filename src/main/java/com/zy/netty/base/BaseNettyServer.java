@@ -7,6 +7,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -36,13 +37,17 @@ public abstract class BaseNettyServer {
 		EventLoopGroup childLoopGroup = new NioEventLoopGroup();
 		try {
 			ServerBootstrap serverBootstrap = new ServerBootstrap();
-			serverBootstrap.group(parentLoopGroup, childLoopGroup).channel(NioServerSocketChannel.class).childHandler(new ChannelInitializer<Channel>() {
-				protected void initChannel(Channel ch) throws Exception {
-					for (ChannelHandler factory : getHandlerList()) {
-						ch.pipeline().addLast(factory);
-					}
-				}
-			});
+			serverBootstrap.group(parentLoopGroup, childLoopGroup)
+						   .channel(NioServerSocketChannel.class)
+						   .option(ChannelOption.SO_BACKLOG, 128)
+						   .option(ChannelOption.SO_KEEPALIVE, true)
+						   .childHandler(new ChannelInitializer<Channel>() {
+								protected void initChannel(Channel ch) throws Exception {
+									for (ChannelHandler factory : getHandlerList()) {
+										ch.pipeline().addLast(factory);
+									}
+								}
+							});
 			
 			ChannelFuture channelFuture = serverBootstrap.bind(port).sync();
 			channelFuture.channel().closeFuture().sync();
