@@ -39,8 +39,6 @@ public abstract class BaseNettyServer {
 			ServerBootstrap serverBootstrap = new ServerBootstrap();
 			serverBootstrap.group(parentLoopGroup, childLoopGroup)
 						   .channel(NioServerSocketChannel.class)
-						   .option(ChannelOption.SO_BACKLOG, 128)
-						   .option(ChannelOption.SO_KEEPALIVE, true)
 						   .childHandler(new ChannelInitializer<Channel>() {
 								protected void initChannel(Channel ch) throws Exception {
 									for (ChannelHandler factory : getHandlerList()) {
