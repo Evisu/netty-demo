@@ -1,6 +1,41 @@
-# Netty 学习示例
+# Netty 
 
-##
+## 什么是Netty
+
+Netty是一款异步的事件驱动的网络应用框架，支持快速地开发可维护的高性能的面向协议的服务和客户端。
+
+## Netty的核心组件
+
+- Channel
+
+	Channel是JAVA NIO的一个基本构造。
+	
+	它代表一个到实体（如一个硬件设备、一个文件、一个网络套接字或者一个能够执行一个或多个不同的I/O操作的程序组件）的开放连接，如读操作和写操作。                                                                                  
+
+- 回调
+
+	Netty在内部使用了回调来处理事件;一个回调被触发时，相关的事件可以被一个interface-ChannelHandler的实现处理。
+	
+	- channelRead0 当服务器接收到一条消息时被调用
+	- channelActive 在到服务器的连接已经建立之后将被调用
+	- channelInactive 在到服务器的连接已经断开之后将被调用
+	- handlerAdded
+	- handlerRemoved
+	- exceptionCaught 在处理过程中引发异常时被调用
+
+- Futrue
+
+	Future提供了另一种操作完成时通知应用程序的方式。这个对象可以看做是一个异步操作结果的占位符;它将在未来某个时刻完成，并提供对其结果的访问。
+
+	JDK预置了interface java.util.concurrent.Future,但是其所提供的实现只允许手动检查对应的操作是否已经完成，或者一直阻塞直到它完成。所以Netty提供了它的实现ChannelFuture,用于在执行异步操作的时候使用。
+
+- 事件和ChannelHandle
+
+	Netty使用不同的事件来通知我们状态的改变或是操作的状态。
+	- 记录日志
+	- 数据转换
+	- 流控制
+	- 应用程序逻辑
 
 ## Netty处理器的重要概念
 
