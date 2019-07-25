@@ -14,17 +14,19 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 /**
  * Netty服务端基础类
+ * 
  * @author walkman
  *
  */
 public abstract class BaseNettyServer {
-	
+
 	/**
 	 * 	处理器集合
+	 * 
 	 * @return
 	 */
 	public abstract List<ChannelHandler> getHandlerList();
-	
+
 	/**
 	 * 	启动服务端
 	 * 
@@ -38,15 +40,16 @@ public abstract class BaseNettyServer {
 		try {
 			ServerBootstrap serverBootstrap = new ServerBootstrap();
 			serverBootstrap.group(parentLoopGroup, childLoopGroup)
-						   .channel(NioServerSocketChannel.class)
-						   .childHandler(new ChannelInitializer<Channel>() {
-								protected void initChannel(Channel ch) throws Exception {
-									for (ChannelHandler factory : getHandlerList()) {
-										ch.pipeline().addLast(factory);
-									}
-								}
-							});
-			
+					.channel(NioServerSocketChannel.class)
+					.childHandler(new ChannelInitializer<Channel>() {
+						protected void initChannel(Channel ch)
+								throws Exception {
+							for (ChannelHandler factory : getHandlerList()) {
+								ch.pipeline().addLast(factory);
+							}
+						}
+					});
+
 			ChannelFuture channelFuture = serverBootstrap.bind(port).sync();
 			channelFuture.channel().closeFuture().sync();
 		} finally {
@@ -54,7 +57,5 @@ public abstract class BaseNettyServer {
 			childLoopGroup.shutdownGracefully();
 		}
 	}
-	
-	
 
 }
